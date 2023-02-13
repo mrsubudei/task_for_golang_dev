@@ -34,12 +34,14 @@ func (us *UsersService) CreateUser(ctx context.Context, user entity.User) error 
 	h := md5.New()
 	io.WriteString(h, response.Str)
 	io.WriteString(h, user.Password)
-	user.Password = fmt.Sprintf("%x", h.Sum(nil))
+	hashed := fmt.Sprintf("%x", h.Sum(nil))
+
+	user.Password = hashed
 
 	err = us.repo.Create(ctx, user)
 	if err != nil {
 		if errors.Is(err, entity.ErrUserAlreadyExists) {
-			return err
+			return entity.ErrUserAlreadyExists
 		}
 		return fmt.Errorf("UsersService - CreateUser - Create: %w", err)
 	}
@@ -52,7 +54,7 @@ func (us *UsersService) GetByEmail(ctx context.Context, email string) (entity.Us
 	user, err := us.repo.GetByEmail(ctx, email)
 	if err != nil {
 		if errors.Is(err, entity.ErrUserNotFound) {
-			return entity.User{}, err
+			return entity.User{}, entity.ErrUserNotFound
 		}
 		return entity.User{}, fmt.Errorf("UsersService - GetByEmail: %w", err)
 	}
