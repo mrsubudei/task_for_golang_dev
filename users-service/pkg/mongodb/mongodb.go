@@ -5,18 +5,25 @@ import (
 	"errors"
 	"time"
 
+	"github.com/mrsubudei/task_for_golang_dev/users-service/internal/config"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const timeout = 10 * time.Second
+const (
+	Timeout         = 10 * time.Second
+	UsersCollection = "users"
+	EmailField      = "email"
+)
 
 // NewClient established connection to a mongoDb instance using provided URI and auth credentials.
-func NewClient(uri, username, password string) (*mongo.Client, error) {
-	opts := options.Client().ApplyURI(uri)
-	if username != "" && password != "" {
+func NewClient(cfg *config.Config) (*mongo.Database, error) {
+	opts := options.Client().ApplyURI(cfg.MongoDB.URI)
+	if cfg.MongoDB.User != "" && cfg.MongoDB.Password != "" {
 		opts.SetAuth(options.Credential{
-			Username: username, Password: password,
+			Username: cfg.MongoDB.User,
+			Password: cfg.MongoDB.Password,
 		})
 	}
 
@@ -25,7 +32,7 @@ func NewClient(uri, username, password string) (*mongo.Client, error) {
 		return nil, err
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	ctx, cancel := context.WithTimeout(context.Background(), Timeout)
 	defer cancel()
 
 	err = client.Connect(ctx)
@@ -38,7 +45,18 @@ func NewClient(uri, username, password string) (*mongo.Client, error) {
 		return nil, err
 	}
 
-	return client, nil
+	db := client.Database(cfg.MongoDB.Name)
+	collection := db.Collection(UsersCollection)
+	index := mongo.IndexModel{
+		Keys:    bson.M{EmailField: 1},
+		Options: options.Index().SetUnique(true),
+	}
+
+	if _, err := collection.Indexes().CreateOne(context.Background(), index); err != nil {
+		return nil, err
+	}
+
+	return db, nil
 }
 
 func IsDuplicate(err error) bool {

@@ -1,0 +1,6 @@
+mongo_db:
+  name: 'users'
+
+logger:
+  log_level: 'debug'
+  rollbar_env: 'task_for_golang_dev'
