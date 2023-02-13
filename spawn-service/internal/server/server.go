@@ -20,8 +20,8 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/keepalive"
 
+	"github.com/mrsubudei/task_for_golang_dev/spawn-service/pkg/logger"
 	pb "github.com/mrsubudei/task_for_golang_dev/spawn-service/pkg/proto"
-	"github.com/mrsubudei/task_for_golang_dev/spawn-service/pkg/proto/logger"
 )
 
 type GrpcServer struct {

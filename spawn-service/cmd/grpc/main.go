@@ -5,7 +5,7 @@ import (
 
 	"github.com/mrsubudei/task_for_golang_dev/spawn-service/internal/config"
 	"github.com/mrsubudei/task_for_golang_dev/spawn-service/internal/server"
-	"github.com/mrsubudei/task_for_golang_dev/spawn-service/pkg/proto/logger"
+	"github.com/mrsubudei/task_for_golang_dev/spawn-service/pkg/logger"
 )
 
 func main() {
