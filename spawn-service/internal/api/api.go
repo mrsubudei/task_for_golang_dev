@@ -1,21 +1,26 @@
 package api
 
 import (
+	"context"
 	"math/rand"
 	"time"
 
 	pb "github.com/mrsubudei/task_for_golang_dev/spawn-service/pkg/proto"
+	"github.com/mrsubudei/task_for_golang_dev/spawn-service/pkg/proto/logger"
 )
 
 type SpawnServer struct {
 	pb.UnimplementedSpawnServer
+	l logger.Interface
 }
 
-func NewSpawnServer() *SpawnServer {
-	return &SpawnServer{}
+func NewSpawnServer(l logger.Interface) *SpawnServer {
+	return &SpawnServer{
+		l: l,
+	}
 }
 
-func (ss *SpawnServer) Generate(in *pb.Empty) *pb.StringResponse {
+func (ss *SpawnServer) Generate(ctx context.Context, in *pb.Empty) (*pb.StringResponse, error) {
 	rand.Seed(time.Now().UnixNano())
 	ans := make([]byte, 0, 12)
 
@@ -34,5 +39,7 @@ func (ss *SpawnServer) Generate(in *pb.Empty) *pb.StringResponse {
 		ans = append(ans, byte(tmp))
 	}
 
-	return &pb.StringResponse{Str: string(ans)}
+	return &pb.StringResponse{
+		Str: string(ans),
+	}, nil
 }
