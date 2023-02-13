@@ -1,6 +1,10 @@
 mongo_db:
   name: 'users'
 
+spawn_api:
+  host: '127.0.0.1'
+  port: '8082' 
+
 logger:
   log_level: 'debug'
   rollbar_env: 'task_for_golang_dev'

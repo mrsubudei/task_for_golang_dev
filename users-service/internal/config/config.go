@@ -9,8 +9,9 @@ import (
 type (
 	// Config -.
 	Config struct {
-		Logger  `yaml:"logger"`
-		MongoDB `yaml:"mongo_db"`
+		Logger   `yaml:"logger"`
+		MongoDB  `yaml:"mongo_db"`
+		SpawnApi `yaml:"spawn_api"`
 	}
 
 	// MongoDB =.
@@ -19,6 +20,12 @@ type (
 		User     string `env-required:"true" yaml:"user" env:"MONGO_USER"`
 		Password string `env-required:"true" yaml:"password" env:"MONGO_PASSWORD"`
 		Name     string `yaml:"name"`
+	}
+
+	// MongoDB =.
+	SpawnApi struct {
+		Host string `yaml:"host"`
+		Port string `yaml:"port"`
 	}
 
 	// Logger -.

@@ -6,7 +6,6 @@ import (
 	"crypto/x509"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net"
 	"os"
 	"os/signal"
@@ -47,19 +46,19 @@ func (gs *GrpcServer) Start(cfg *config.Config) error {
 	// read ca's cert, verify to client's certificate
 	caPem, err := ioutil.ReadFile("cert/ca.cert")
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("server - Start - ReadFile: %w", err)
 	}
 
 	// create cert pool and append ca's cert
 	certPool := x509.NewCertPool()
 	if !certPool.AppendCertsFromPEM(caPem) {
-		log.Fatal(err)
+		return fmt.Errorf("server - Start - AppendCertsFromPEM: %w", err)
 	}
 
 	// read server cert & key
 	serverCert, err := tls.LoadX509KeyPair("cert/service.pem", "cert/service.key")
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("server - Start - LoadX509KeyPair: %w", err)
 	}
 
 	// configuration of the certificate what we want to
@@ -74,7 +73,7 @@ func (gs *GrpcServer) Start(cfg *config.Config) error {
 
 	l, err := net.Listen("tcp", grpcAddr)
 	if err != nil {
-		return fmt.Errorf("failed to listen: %w", err)
+		return fmt.Errorf("server - Start - Listen: %w", err)
 	}
 	defer l.Close()
 

@@ -3,6 +3,7 @@ package mongodb
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/mrsubudei/task_for_golang_dev/users-service/internal/entity"
 	"github.com/mrsubudei/task_for_golang_dev/users-service/pkg/mongodb"
@@ -24,11 +25,14 @@ func NewUsersRepo(db *mongo.Database) *UsersRepo {
 
 func (r *UsersRepo) Create(ctx context.Context, user entity.User) error {
 	_, err := r.db.InsertOne(ctx, user)
-	if mongodb.IsDuplicate(err) {
-		return entity.ErrUserAlreadyExists
+	if err != nil {
+		if mongodb.IsDuplicate(err) {
+			return entity.ErrUserAlreadyExists
+		}
+		return fmt.Errorf("UsersRepo - Create - InsertOne: %w", err)
 	}
 
-	return err
+	return nil
 }
 
 func (r *UsersRepo) GetByEmail(ctx context.Context, email string) (entity.User, error) {
@@ -38,7 +42,7 @@ func (r *UsersRepo) GetByEmail(ctx context.Context, email string) (entity.User, 
 			return entity.User{}, entity.ErrUserNotFound
 		}
 
-		return entity.User{}, err
+		return entity.User{}, fmt.Errorf("UsersRepo - GetByEmail - FindOne: %w", err)
 	}
 
 	return user, nil
