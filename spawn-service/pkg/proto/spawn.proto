@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package spawn;
+
+option go_package = "github.com/mrsubudei/task_for_golang_dev/spawn-service/pkg/proto/spawn";
+
+service Spawn {
+  rpc Generate(Empty) returns (StringResponse) {}
+}
+
+message Empty {
+}
+
+message StringResponse {
+  string str = 1;
+}
+
+
