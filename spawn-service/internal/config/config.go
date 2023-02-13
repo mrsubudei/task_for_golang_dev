@@ -9,7 +9,8 @@ import (
 type (
 	// Config -.
 	Config struct {
-		Grpc `yaml:"grpc"`
+		Grpc   `yaml:"grpc"`
+		Logger `yaml:"logger"`
 	}
 
 	// Grpc -.
@@ -19,6 +20,11 @@ type (
 		Timeout           int64  `yaml:"timeout"`
 		MaxConnectionAge  int64  `yaml:"max_connection_age"`
 		Host              string `yaml:"host"`
+	}
+
+	// Logger -.
+	Logger struct {
+		Level string `yaml:"log_level"`
 	}
 )
 

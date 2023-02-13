@@ -4,3 +4,7 @@ grpc:
   maxConnectionIdle: 5 # Minutes
   timeout: 15 # Seconds
   maxConnectionAge: 5 # Minutes
+
+logger:
+  log_level: 'debug'
+  rollbar_env: 'task_for_golang_dev'
