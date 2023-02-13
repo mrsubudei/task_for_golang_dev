@@ -2,25 +2,28 @@ package service
 
 import (
 	"context"
-	"crypto/md5"
 	"errors"
 	"fmt"
-	"io"
 
 	pb "github.com/mrsubudei/task_for_golang_dev/spawn-service/pkg/proto"
 	"github.com/mrsubudei/task_for_golang_dev/users-service/internal/entity"
 	"github.com/mrsubudei/task_for_golang_dev/users-service/internal/repository"
+	"github.com/mrsubudei/task_for_golang_dev/users-service/pkg/hasher"
 )
 
 type UsersService struct {
-	repo repository.Users
-	c    pb.SpawnClient
+	repo   repository.Users
+	hasher hasher.PasswordHasher
+	c      pb.SpawnClient
 }
 
-func NewUsersService(repo repository.Users, client pb.SpawnClient) *UsersService {
+func NewUsersService(repo repository.Users, client pb.SpawnClient,
+	hasher hasher.PasswordHasher) *UsersService {
+
 	return &UsersService{
-		repo: repo,
-		c:    client,
+		repo:   repo,
+		c:      client,
+		hasher: hasher,
 	}
 }
 
@@ -30,12 +33,7 @@ func (us *UsersService) CreateUser(ctx context.Context, user entity.User) error 
 		return fmt.Errorf("UsersService - CreateUser - Generate: %w", err)
 	}
 
-	// combine and hash raw password with generated salt string
-	h := md5.New()
-	io.WriteString(h, response.Str)
-	io.WriteString(h, user.Password)
-	hashed := fmt.Sprintf("%x", h.Sum(nil))
-
+	hashed := us.hasher.Hash(response.Str, user.Password)
 	user.Password = hashed
 
 	err = us.repo.Create(ctx, user)

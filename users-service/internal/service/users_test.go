@@ -10,6 +10,7 @@ import (
 	mock_repository "github.com/mrsubudei/task_for_golang_dev/users-service/internal/repository/mock"
 	"github.com/mrsubudei/task_for_golang_dev/users-service/internal/service"
 	mock_spawn_api "github.com/mrsubudei/task_for_golang_dev/users-service/pkg/api-spawn/mock"
+	"github.com/mrsubudei/task_for_golang_dev/users-service/pkg/hasher"
 	"github.com/stretchr/testify/require"
 )
 
@@ -28,9 +29,10 @@ func mockUserService(t *testing.T) (*service.UsersService, *mock_repository.Mock
 	mockCtl := gomock.NewController(t)
 	defer mockCtl.Finish()
 
+	hasher := hasher.NewMd5Hasher()
 	repo := mock_repository.NewMockUsersRepo(mockCtl)
 	spawnClient := mock_spawn_api.NewMockSpawnApi()
-	usersService := service.NewUsersService(repo, spawnClient)
+	usersService := service.NewUsersService(repo, spawnClient, hasher)
 
 	return usersService, repo
 }
