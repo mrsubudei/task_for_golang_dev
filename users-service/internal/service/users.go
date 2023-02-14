@@ -33,7 +33,9 @@ func (us *UsersService) CreateUser(ctx context.Context, user entity.User) error 
 		return fmt.Errorf("UsersService - CreateUser - Generate: %w", err)
 	}
 
-	hashed := us.hasher.Hash(response.Str, user.Password)
+	user.Salt = response.Str
+	hashed := us.hasher.Hash(user.Salt, user.Password)
+
 	user.Password = hashed
 
 	err = us.repo.Create(ctx, user)

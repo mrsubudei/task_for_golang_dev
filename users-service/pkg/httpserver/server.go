@@ -18,7 +18,7 @@ type Server struct {
 	cfg        *config.Config
 }
 
-func NewServer(handler *chi.Mux, cfg *config.Config) *Server {
+func NewServer(mux *chi.Mux, cfg *config.Config) *Server {
 	return &Server{
 		httpServer: &http.Server{
 			Addr: cfg.Http.Port,
@@ -26,9 +26,9 @@ func NewServer(handler *chi.Mux, cfg *config.Config) *Server {
 				DefaultTime),
 			WriteTimeout: time.Duration(cfg.Http.DefaultWriteTimeout *
 				DefaultTime),
-			Handler: handler,
+			Handler: mux,
 		},
-		h:   handler,
+		h:   mux,
 		cfg: cfg,
 	}
 }

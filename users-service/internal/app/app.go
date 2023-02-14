@@ -12,14 +12,13 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/mrsubudei/task_for_golang_dev/users-service/internal/config"
 	v1 "github.com/mrsubudei/task_for_golang_dev/users-service/internal/controller/http/v1"
+	m "github.com/mrsubudei/task_for_golang_dev/users-service/internal/repository/mongodb"
 	"github.com/mrsubudei/task_for_golang_dev/users-service/internal/service"
 	api_spawn "github.com/mrsubudei/task_for_golang_dev/users-service/pkg/api-spawn"
 	"github.com/mrsubudei/task_for_golang_dev/users-service/pkg/hasher"
 	"github.com/mrsubudei/task_for_golang_dev/users-service/pkg/httpserver"
 	"github.com/mrsubudei/task_for_golang_dev/users-service/pkg/logger"
 	"github.com/mrsubudei/task_for_golang_dev/users-service/pkg/mongodb"
-
-	m "github.com/mrsubudei/task_for_golang_dev/users-service/internal/repository/mongodb"
 )
 
 func Run(cfg *config.Config) {
@@ -39,20 +38,21 @@ func Run(cfg *config.Config) {
 	hasher := hasher.NewMd5Hasher()
 
 	// Spawn api client
-	spawnClient, err := api_spawn.NewClient(cfg)
+	spawnClient, grpcConn, err := api_spawn.NewClient(cfg)
 	if err != nil {
 		l.Error(fmt.Errorf("app - Run - NewClient: %w", err))
 	}
+	defer grpcConn.Close()
 
 	// Service
 	service := service.NewUsersService(repo, spawnClient, hasher)
 
 	// Handler
-	handler := chi.NewRouter()
-	v1.NewRouter(handler, l, service)
+	mux := chi.NewRouter()
+	v1.NewRouter(mux, l, service)
 
 	// Http Server
-	httpServer := httpserver.NewServer(handler, cfg)
+	httpServer := httpserver.NewServer(mux, cfg)
 
 	go func() {
 		if err := httpServer.Run(); !errors.Is(err, http.ErrServerClosed) {
@@ -65,6 +65,7 @@ func Run(cfg *config.Config) {
 	// Graceful Shutdown
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+
 	<-quit
 	err = httpServer.Shutdown()
 	if err != nil {
