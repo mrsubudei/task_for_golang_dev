@@ -1,3 +1,4 @@
+// package api implements methods defind in proto file
 package api
 
 import (

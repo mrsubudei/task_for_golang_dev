@@ -13,16 +13,19 @@ import (
 
 const usersCollection = "users"
 
+// UsersRepo -.
 type UsersRepo struct {
 	db *mongo.Collection
 }
 
+// NewUsersRepo -.
 func NewUsersRepo(db *mongo.Database) *UsersRepo {
 	return &UsersRepo{
 		db: db.Collection(usersCollection),
 	}
 }
 
+// Create -.
 func (r *UsersRepo) Create(ctx context.Context, user entity.User) error {
 	_, err := r.db.InsertOne(ctx, user)
 	if err != nil {
@@ -35,6 +38,7 @@ func (r *UsersRepo) Create(ctx context.Context, user entity.User) error {
 	return nil
 }
 
+// GetByEmail -.
 func (r *UsersRepo) GetByEmail(ctx context.Context, email string) (entity.User, error) {
 	var user entity.User
 	if err := r.db.FindOne(ctx, bson.M{"email": email}).Decode(&user); err != nil {

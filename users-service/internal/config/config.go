@@ -18,7 +18,7 @@ type (
 		Http     `yaml:"http"`
 	}
 
-	// MongoDB =.
+	// MongoDB -.
 	MongoDB struct {
 		URI      string `env-required:"true" yaml:"uri" env:"MONGO_URI"`
 		User     string `env-required:"true" yaml:"user" env:"MONGO_USER"`
@@ -26,13 +26,13 @@ type (
 		Name     string `yaml:"name"`
 	}
 
-	// SpawnApi =.
+	// SpawnApi -.
 	SpawnApi struct {
 		Host string `yaml:"host"`
 		Port string `yaml:"port"`
 	}
 
-	// Http =.
+	// Http -.
 	Http struct {
 		Host                   string `yaml:"host"`
 		Port                   string `yaml:"port"`

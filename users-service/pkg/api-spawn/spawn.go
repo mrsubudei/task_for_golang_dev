@@ -1,3 +1,4 @@
+// package api_spawn implements connection to swpawn-service
 package api_spawn
 
 import (
@@ -13,6 +14,7 @@ import (
 	"github.com/mrsubudei/task_for_golang_dev/users-service/internal/config"
 )
 
+// NewClient -.
 func NewClient(cfg *config.Config) (pb.SpawnClient, *grpc.ClientConn, error) {
 	grpcAddr := fmt.Sprintf("%s:%s", cfg.SpawnApi.Host, cfg.SpawnApi.Port)
 

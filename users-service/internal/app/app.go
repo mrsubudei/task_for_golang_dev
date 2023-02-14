@@ -1,3 +1,4 @@
+// Package app configures and runs application.
 package app
 
 import (
@@ -21,6 +22,7 @@ import (
 	"github.com/mrsubudei/task_for_golang_dev/users-service/pkg/mongodb"
 )
 
+// Run creates objects via constructors.
 func Run(cfg *config.Config) {
 	// Logger
 	l := logger.New(cfg.Logger.Level)

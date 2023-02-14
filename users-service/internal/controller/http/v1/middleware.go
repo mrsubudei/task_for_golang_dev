@@ -9,6 +9,7 @@ import (
 	"github.com/mrsubudei/task_for_golang_dev/users-service/internal/entity"
 )
 
+// CheckValues -.
 func (h *UsersHandler) CheckValues(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 

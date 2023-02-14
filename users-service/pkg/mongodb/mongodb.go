@@ -1,3 +1,4 @@
+// Package mongodb implements mongodb connection.
 package mongodb
 
 import (
@@ -59,6 +60,7 @@ func NewMongoDB(cfg *config.Config) (*mongo.Database, error) {
 	return db, nil
 }
 
+// IsDuplicate -.
 func IsDuplicate(err error) bool {
 	var e mongo.WriteException
 	if errors.As(err, &e) {

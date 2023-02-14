@@ -2,22 +2,26 @@ package v1
 
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
+// Answer -.
 type Answer interface {
 	getCode() int
 }
 
+// ErrMessage -.
 type ErrMessage struct {
 	Error  string `json:"error,omitempty"`
 	Detail string `json:"detail,omitempty"`
 	Code   int    `json:"-"`
 }
 
+// getCode -.
 func (e ErrMessage) getCode() int {
 	return e.Code
 
 }
 
-type Respone struct {
+// Response -.
+type Response struct {
 	Id       primitive.ObjectID `json:"id,omitempty"`
 	Email    string             `json:"email,omitempty"`
 	Salt     string             `json:"salt,omitempty"`
@@ -25,7 +29,8 @@ type Respone struct {
 	Code     int                `json:"-"`
 }
 
-func (r Respone) getCode() int {
+// getCode -.
+func (r Response) getCode() int {
 	return r.Code
 }
 

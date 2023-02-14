@@ -1,3 +1,4 @@
+// package server creates new grpc server
 package server
 
 import (

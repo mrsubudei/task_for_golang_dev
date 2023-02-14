@@ -1,0 +1,115 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Users-service",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8081",
+    "basePath": "/v1",
+    "paths": {
+        "/create-user": {
+            "post": {
+                "description": "Creates new user, adds to database",
+                "consumes": [
+                    "application/json",
+                    "application/json"
+                ],
+                "tags": [
+                    "create"
+                ],
+                "summary": "Create user",
+                "operationId": "create-tser",
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "409": {
+                        "description": "User already exists",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/get-user{email}": {
+            "get": {
+                "description": "Gets user from database using given email",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "get"
+                ],
+                "summary": "Get user",
+                "operationId": "get-by-email",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "email",
+                        "name": "some_email",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/v1.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrMessage"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "v1.ErrMessage": {
+            "type": "object",
+            "properties": {
+                "detail": {
+                    "type": "string"
+                },
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.Response": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "salt": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

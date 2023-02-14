@@ -1,3 +1,4 @@
+// package mock_service mocks user service
 package mock_service
 
 import (
@@ -7,14 +8,17 @@ import (
 	"github.com/mrsubudei/task_for_golang_dev/users-service/internal/entity"
 )
 
+// UsersMockService is a mock for Service interface
 type UsersMockService struct {
 	Users []entity.User
 }
 
+// Creates new UsersMockService
 func NewUsersMockService() *UsersMockService {
 	return &UsersMockService{}
 }
 
+// CreateUser mocks base method
 func (um *UsersMockService) CreateUser(ctx context.Context, user entity.User) error {
 	if user.Email == "exist@mail.ru" {
 		return entity.ErrUserAlreadyExists
@@ -26,6 +30,7 @@ func (um *UsersMockService) CreateUser(ctx context.Context, user entity.User) er
 	return nil
 }
 
+// GetByEmail mocks base method
 func (um *UsersMockService) GetByEmail(ctx context.Context,
 	email string) (entity.User, error) {
 

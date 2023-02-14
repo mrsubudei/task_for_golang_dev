@@ -1,3 +1,4 @@
+// Package service implements application business logic. Each logic group in own file.
 package service
 
 import (
@@ -11,12 +12,14 @@ import (
 	"github.com/mrsubudei/task_for_golang_dev/users-service/pkg/hasher"
 )
 
+// UsersService -.
 type UsersService struct {
 	repo   repository.Users
 	hasher hasher.PasswordHasher
 	c      pb.SpawnClient
 }
 
+// NewUsersService -.
 func NewUsersService(repo repository.Users, client pb.SpawnClient,
 	hasher hasher.PasswordHasher) *UsersService {
 
@@ -27,6 +30,7 @@ func NewUsersService(repo repository.Users, client pb.SpawnClient,
 	}
 }
 
+// CreateUser -.
 func (us *UsersService) CreateUser(ctx context.Context, user entity.User) error {
 	response, err := us.c.Generate(ctx, &pb.Empty{})
 	if err != nil {
@@ -49,6 +53,7 @@ func (us *UsersService) CreateUser(ctx context.Context, user entity.User) error 
 	return nil
 }
 
+// GetByEmail -.
 func (us *UsersService) GetByEmail(ctx context.Context, email string) (entity.User, error) {
 
 	user, err := us.repo.GetByEmail(ctx, email)

@@ -1,3 +1,4 @@
+// Package v1 implements routing paths. Each services in own file.
 package v1
 
 import (
@@ -11,8 +12,17 @@ import (
 	"github.com/mrsubudei/task_for_golang_dev/users-service/internal/entity"
 	"github.com/mrsubudei/task_for_golang_dev/users-service/internal/service"
 	"github.com/mrsubudei/task_for_golang_dev/users-service/pkg/logger"
+	httpSwagger "github.com/swaggo/http-swagger"
+
+	_ "github.com/mrsubudei/task_for_golang_dev/users-service/docs"
 )
 
+// NewRouter -.
+// Swagger spec:
+// @title       Users-service
+// @version     1.0
+// @host        localhost:8081
+// @BasePath    /v1
 func NewRouter(c *chi.Mux, l logger.Interface, service service.Service) {
 
 	c.Use(middleware.RequestID)
@@ -25,12 +35,15 @@ func NewRouter(c *chi.Mux, l logger.Interface, service service.Service) {
 		l:       l,
 		c:       c,
 	}
-
+	c.Get("/swagger/*", httpSwagger.Handler(
+		httpSwagger.URL("http://localhost:8081/swagger/doc.json"),
+	))
 	c.With(h.CheckValues).Post("/create-user", h.createUser)
 	c.Get("/get-user/{email}", h.getByEmail)
 
 }
 
+// ParseJson -.
 func (h *UsersHandler) ParseJson(w http.ResponseWriter, r *http.Request,
 	user *entity.User) error {
 
@@ -44,6 +57,7 @@ func (h *UsersHandler) ParseJson(w http.ResponseWriter, r *http.Request,
 	return nil
 }
 
+// WriteResponse -.
 func (h *UsersHandler) WriteResponse(w http.ResponseWriter, ans Answer) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	jsonResp, err := json.Marshal(ans)

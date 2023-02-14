@@ -12,12 +12,14 @@ import (
 
 const DefaultTime = int(time.Second)
 
+// Server -.
 type Server struct {
 	httpServer *http.Server
 	h          http.Handler
 	cfg        *config.Config
 }
 
+// NewServer -.
 func NewServer(mux *chi.Mux, cfg *config.Config) *Server {
 	return &Server{
 		httpServer: &http.Server{
@@ -33,10 +35,12 @@ func NewServer(mux *chi.Mux, cfg *config.Config) *Server {
 	}
 }
 
+// Run -.
 func (s *Server) Run() error {
 	return s.httpServer.ListenAndServe()
 }
 
+// Shutdown -.
 func (s *Server) Shutdown() error {
 	ctx, cancel := context.WithTimeout(context.Background(),
 		time.Duration(s.cfg.Http.DefaultShutdownTimeout*DefaultTime))

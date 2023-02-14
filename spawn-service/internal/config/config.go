@@ -7,13 +7,11 @@ import (
 )
 
 type (
-	// Config -.
 	Config struct {
 		Grpc   `yaml:"grpc"`
 		Logger `yaml:"logger"`
 	}
 
-	// Grpc -.
 	Grpc struct {
 		Port              string `yaml:"port"`
 		MaxConnectionIdle int64  `yaml:"max_connection_idle"`
@@ -22,13 +20,11 @@ type (
 		Host              string `yaml:"host"`
 	}
 
-	// Logger -.
 	Logger struct {
 		Level string `yaml:"log_level"`
 	}
 )
 
-// NewConfig returns app config.
 func NewConfig(path string) (*Config, error) {
 	cfg := &Config{}
 

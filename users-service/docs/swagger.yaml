@@ -1,0 +1,76 @@
+basePath: /v1
+definitions:
+  v1.ErrMessage:
+    properties:
+      detail:
+        type: string
+      error:
+        type: string
+    type: object
+  v1.Response:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      password:
+        type: string
+      salt:
+        type: string
+    type: object
+host: localhost:8081
+info:
+  contact: {}
+  title: Users-service
+  version: "1.0"
+paths:
+  /create-user:
+    post:
+      consumes:
+      - application/json
+      - application/json
+      description: Creates new user, adds to database
+      operationId: create-tser
+      responses:
+        "201":
+          description: Created
+        "409":
+          description: User already exists
+          schema:
+            $ref: '#/definitions/v1.ErrMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/v1.ErrMessage'
+      summary: Create user
+      tags:
+      - create
+  /get-user{email}:
+    get:
+      description: Gets user from database using given email
+      operationId: get-by-email
+      parameters:
+      - description: email
+        in: path
+        name: some_email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Ok
+          schema:
+            $ref: '#/definitions/v1.Response'
+        "404":
+          description: Not found
+          schema:
+            $ref: '#/definitions/v1.ErrMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/v1.ErrMessage'
+      summary: Get user
+      tags:
+      - get
+swagger: "2.0"
