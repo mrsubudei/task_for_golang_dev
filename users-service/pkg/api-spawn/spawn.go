@@ -28,7 +28,7 @@ func NewClient(cfg *config.Config) (pb.SpawnClient, *grpc.ClientConn, error) {
 	}
 
 	//read client cert
-	clientCert, err := tls.LoadX509KeyPair("cert/service.pem", "cert/service.key")
+	clientCert, err := tls.LoadX509KeyPair("cert/service.crt", "cert/service.key")
 	if err != nil {
 		return nil, nil, fmt.Errorf("api_spawn - NewClient - LoadX509KeyPair: %w", err)
 	}

@@ -56,7 +56,7 @@ func (gs *GrpcServer) Start(cfg *config.Config) error {
 	}
 
 	// read server cert & key
-	serverCert, err := tls.LoadX509KeyPair("cert/service.pem", "cert/service.key")
+	serverCert, err := tls.LoadX509KeyPair("cert/service.crt", "cert/service.key")
 	if err != nil {
 		return fmt.Errorf("server - Start - LoadX509KeyPair: %w", err)
 	}

@@ -20,12 +20,12 @@ const (
 // NewClient established connection to a mongoDb instance using provided URI and auth credentials.
 func NewMongoDB(cfg *config.Config) (*mongo.Database, error) {
 	opts := options.Client().ApplyURI(cfg.MongoDB.URI)
-	// if cfg.MongoDB.User != "" && cfg.MongoDB.Password != "" {
-	// 	opts.SetAuth(options.Credential{
-	// 		Username: cfg.MongoDB.User,
-	// 		Password: cfg.MongoDB.Password,
-	// 	})
-	// }
+	if cfg.MongoDB.User != "" && cfg.MongoDB.Password != "" {
+		opts.SetAuth(options.Credential{
+			Username: cfg.MongoDB.User,
+			Password: cfg.MongoDB.Password,
+		})
+	}
 
 	client, err := mongo.NewClient(opts)
 	if err != nil {

@@ -2,7 +2,7 @@ mongo_db:
   name: 'usersdb'
 
 spawn_api:
-  host: '127.0.0.1'
+  host: 'spawn'
   port: '8082'
 
 http:
