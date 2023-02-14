@@ -6,7 +6,6 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"io/ioutil"
 	"net"
 	"os"
 	"os/signal"
@@ -45,7 +44,7 @@ func (gs *GrpcServer) Start(cfg *config.Config) error {
 	isReady.Store(false)
 
 	// read ca's cert, verify to client's certificate
-	caPem, err := ioutil.ReadFile("cert/ca.cert")
+	caPem, err := os.ReadFile("cert/ca.cert")
 	if err != nil {
 		return fmt.Errorf("server - Start - ReadFile: %w", err)
 	}

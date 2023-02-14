@@ -5,7 +5,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"io/ioutil"
+	"os"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -18,7 +18,7 @@ import (
 func NewClient(cfg *config.Config) (pb.SpawnClient, *grpc.ClientConn, error) {
 	grpcAddr := fmt.Sprintf("%s:%s", cfg.SpawnApi.Host, cfg.SpawnApi.Port)
 
-	caCert, err := ioutil.ReadFile("cert/ca.cert")
+	caCert, err := os.ReadFile("cert/ca.cert")
 	if err != nil {
 		return nil, nil, fmt.Errorf("api_spawn - NewClient - ReadFile: %w", err)
 	}

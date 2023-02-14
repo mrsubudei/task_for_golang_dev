@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	"errors"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -13,8 +12,6 @@ import (
 	"github.com/mrsubudei/task_for_golang_dev/users-service/pkg/hasher"
 	"github.com/stretchr/testify/require"
 )
-
-var errInternalServErr = errors.New("test: internal server error")
 
 type test struct {
 	name string

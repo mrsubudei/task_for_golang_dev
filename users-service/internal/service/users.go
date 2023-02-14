@@ -38,7 +38,10 @@ func (us *UsersService) CreateUser(ctx context.Context, user entity.User) error 
 	}
 
 	user.Salt = response.Str
-	hashed := us.hasher.Hash(user.Salt, user.Password)
+	hashed, err := us.hasher.Hash(user.Salt, user.Password)
+	if err != nil {
+		return fmt.Errorf("UsersService - CreateUser - Hash: %w", err)
+	}
 
 	user.Password = hashed
 
