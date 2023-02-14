@@ -1,7 +1,10 @@
 package config
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"strings"
 
 	"github.com/ilyakaznacheev/cleanenv"
 )
@@ -12,6 +15,7 @@ type (
 		Logger   `yaml:"logger"`
 		MongoDB  `yaml:"mongo_db"`
 		SpawnApi `yaml:"spawn_api"`
+		Http     `yaml:"http"`
 	}
 
 	// MongoDB =.
@@ -22,10 +26,19 @@ type (
 		Name     string `yaml:"name"`
 	}
 
-	// MongoDB =.
+	// SpawnApi =.
 	SpawnApi struct {
 		Host string `yaml:"host"`
 		Port string `yaml:"port"`
+	}
+
+	// Http =.
+	Http struct {
+		Host                   string `yaml:"host"`
+		Port                   string `yaml:"port"`
+		DefaultReadTimeout     int    `yaml:"default_read_timeout"`
+		DefaultWriteTimeout    int    `yaml:"default_write_timeout"`
+		DefaultShutdownTimeout int    `yaml:"default_shutdown_timeout"`
 	}
 
 	// Logger -.
@@ -38,15 +51,47 @@ type (
 func NewConfig(path string) (*Config, error) {
 	cfg := &Config{}
 
-	err := cleanenv.ReadConfig(path, cfg)
+	err := setEnv()
 	if err != nil {
-		return nil, fmt.Errorf("config error: %w", err)
+		return nil, fmt.Errorf("config - setEnv: %w", err)
 	}
 
-	err = cleanenv.ReadEnv(cfg)
+	err = cleanenv.ReadConfig(path, cfg)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("config - ReadConfig: %w", err)
 	}
 
 	return cfg, nil
+}
+
+func setEnv() error {
+	var file *os.File
+	var err error
+	file, err = os.Open("env.example")
+	if err != nil {
+		// this is need for tests files
+		if file, err = os.Open("../../env.example"); err != nil {
+			if file, err = os.Open("../../../../env.example"); err != nil {
+				return fmt.Errorf("setEnv - Open: %w", err)
+			}
+		}
+	}
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if equal := strings.Index(line, "="); equal >= 0 {
+			if key := strings.TrimSpace(line[:equal]); len(key) > 0 {
+				value := ""
+				if len(line) > equal {
+					value = strings.TrimSpace(line[equal+1:])
+				}
+				os.Setenv(key, value)
+			}
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		return fmt.Errorf("setEnv - Scan: %w", err)
+	}
+	return nil
 }

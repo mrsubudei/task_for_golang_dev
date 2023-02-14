@@ -9,6 +9,7 @@ require (
 	github.com/acobaugh/osrelease v0.0.0-20181218015638-a93a0a55a249 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.13.0 // indirect
+	github.com/go-chi/chi/v5 v5.0.8 // indirect
 	github.com/go-playground/assert/v2 v2.2.0 // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
@@ -23,6 +24,7 @@ require (
 	github.com/mrsubudei/task_for_golang_dev/spawn-service v0.0.0-20230213125631-f5eb92c933a6 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/rs/zerolog v1.29.0 // indirect
 	github.com/spf13/afero v1.8.2 // indirect
 	github.com/stretchr/objx v0.5.0 // indirect
 	github.com/stretchr/testify v1.8.1 // indirect
