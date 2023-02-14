@@ -2,54 +2,43 @@ package mock_service
 
 import (
 	"context"
-	"reflect"
+	"errors"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mrsubudei/task_for_golang_dev/users-service/internal/entity"
 )
 
-type MockUsers struct {
-	ctrl     *gomock.Controller
-	recorder *MockUsersRecorder
+type UsersMockService struct {
+	Users []entity.User
 }
 
-type MockUsersRecorder struct {
-	mock *MockUsers
+func NewUsersMockService() *UsersMockService {
+	return &UsersMockService{}
 }
 
-func NewMockUsers(ctrl *gomock.Controller) *MockUsers {
-	mock := &MockUsers{ctrl: ctrl}
-	mock.recorder = &MockUsersRecorder{mock}
-	return mock
+func (um *UsersMockService) CreateUser(ctx context.Context, user entity.User) error {
+	if user.Email == "exist@mail.ru" {
+		return entity.ErrUserAlreadyExists
+	} else if user.Email == "internal@error" {
+		return errors.New("internal error")
+	}
+
+	um.Users = append(um.Users, user)
+	return nil
 }
 
-func (m *MockUsers) EXPECT() *MockUsersRecorder {
-	return m.recorder
-}
+func (um *UsersMockService) GetByEmail(ctx context.Context,
+	email string) (entity.User, error) {
 
-func (m *MockUsers) CreateUser(ctx context.Context, user entity.User) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateUser", ctx, user)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
+	if email == "not@found" {
+		return entity.User{}, entity.ErrUserNotFound
+	} else if email == "internal@error" {
+		return entity.User{}, errors.New("internal error")
+	}
 
-func (mr *MockUsersRecorder) CreateUser(ctx, user interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser",
-		reflect.TypeOf((*MockUsers)(nil).CreateUser), ctx, user)
-}
-
-func (m *MockUsers) GetByEmail(ctx context.Context, email string) (entity.User, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetByEmail", ctx, email)
-	ret0, _ := ret[0].(entity.User)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-func (mr *MockUsersRecorder) GetByEmail(ctx, email interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByEmail",
-		reflect.TypeOf((*MockUsers)(nil).GetByEmail), ctx, email)
+	for _, v := range um.Users {
+		if email == v.Email {
+			return v, nil
+		}
+	}
+	return entity.User{}, entity.ErrUserNotFound
 }

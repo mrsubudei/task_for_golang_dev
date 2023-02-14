@@ -12,7 +12,7 @@ import (
 )
 
 type UsersHandler struct {
-	service *service.UsersService
+	service service.Service
 	l       logger.Interface
 	c       *chi.Mux
 }
@@ -23,7 +23,7 @@ func (h *UsersHandler) createUser(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		h.l.Error(fmt.Errorf("v1 - createUser - TypeAssertion:"+
 			"got data of type %T but wanted %T", user, entity.User{}))
-		h.writeResponse(w, ErrMessage{code: http.StatusInternalServerError,
+		h.WriteResponse(w, ErrMessage{Code: http.StatusInternalServerError,
 			Error: http.StatusText(http.StatusInternalServerError)})
 		return
 	}
@@ -31,14 +31,19 @@ func (h *UsersHandler) createUser(w http.ResponseWriter, r *http.Request) {
 	err := h.service.CreateUser(r.Context(), user)
 	if err != nil {
 		if errors.Is(err, entity.ErrUserAlreadyExists) {
-			h.writeResponse(w, ErrMessage{code: http.StatusConflict,
+			h.WriteResponse(w, ErrMessage{Code: http.StatusConflict,
 				Error: entity.ErrUserAlreadyExists.Error()})
 			return
 		}
 		h.l.Error(fmt.Errorf("v1 - createUser - CreateUser: %w", err))
-		h.writeResponse(w, ErrMessage{code: http.StatusInternalServerError,
+		h.WriteResponse(w, ErrMessage{Code: http.StatusInternalServerError,
 			Error: http.StatusText(http.StatusInternalServerError)})
+		return
 	}
+
+	h.WriteResponse(w, ErrMessage{
+		Code: http.StatusCreated,
+	})
 }
 
 func (h *UsersHandler) getByEmail(w http.ResponseWriter, r *http.Request) {
@@ -47,23 +52,23 @@ func (h *UsersHandler) getByEmail(w http.ResponseWriter, r *http.Request) {
 	user, err := h.service.GetByEmail(r.Context(), email)
 	if err != nil {
 		if errors.Is(err, entity.ErrUserNotFound) {
-			h.writeResponse(w, ErrMessage{code: http.StatusNotFound,
+			h.WriteResponse(w, ErrMessage{Code: http.StatusNotFound,
 				Error: entity.ErrUserNotFound.Error()})
 			return
 		}
 		h.l.Error(fmt.Errorf("v1 - getByEmail - GetByEmail: %w", err))
-		h.writeResponse(w, ErrMessage{code: http.StatusInternalServerError,
+		h.WriteResponse(w, ErrMessage{Code: http.StatusInternalServerError,
 			Error: http.StatusText(http.StatusInternalServerError)})
 		return
 	}
 
 	respone := Respone{
-		code:     http.StatusOK,
+		Code:     http.StatusOK,
 		Id:       user.Id,
 		Email:    user.Email,
 		Salt:     user.Salt,
 		Password: user.Password,
 	}
 
-	h.writeResponse(w, respone)
+	h.WriteResponse(w, respone)
 }

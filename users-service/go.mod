@@ -10,6 +10,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/go-chi/chi/v5 v5.0.8 // indirect
+	github.com/go-playground/assert v1.2.1 // indirect
 	github.com/go-playground/assert/v2 v2.2.0 // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect

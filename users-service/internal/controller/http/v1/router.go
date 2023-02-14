@@ -13,7 +13,7 @@ import (
 	"github.com/mrsubudei/task_for_golang_dev/users-service/pkg/logger"
 )
 
-func NewRouter(c *chi.Mux, l logger.Interface, service *service.UsersService) {
+func NewRouter(c *chi.Mux, l logger.Interface, service service.Service) {
 
 	c.Use(middleware.RequestID)
 	c.Use(middleware.Logger)
@@ -26,17 +26,17 @@ func NewRouter(c *chi.Mux, l logger.Interface, service *service.UsersService) {
 		c:       c,
 	}
 
-	c.With(h.checkValues).Post("/create-user", h.createUser)
+	c.With(h.CheckValues).Post("/create-user", h.createUser)
 	c.Get("/get-user/{email}", h.getByEmail)
 
 }
 
-func (h *UsersHandler) parseJson(w http.ResponseWriter, r *http.Request,
+func (h *UsersHandler) ParseJson(w http.ResponseWriter, r *http.Request,
 	user *entity.User) error {
 
 	err := json.NewDecoder(r.Body).Decode(user)
 	if err != nil {
-		h.writeResponse(w, ErrMessage{code: http.StatusBadRequest,
+		h.WriteResponse(w, ErrMessage{Code: http.StatusBadRequest,
 			Error: JsonNotCorrect})
 		return fmt.Errorf(WrongDataFormat)
 	}
@@ -44,11 +44,11 @@ func (h *UsersHandler) parseJson(w http.ResponseWriter, r *http.Request,
 	return nil
 }
 
-func (h *UsersHandler) writeResponse(w http.ResponseWriter, ans Answer) {
+func (h *UsersHandler) WriteResponse(w http.ResponseWriter, ans Answer) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	jsonResp, err := json.Marshal(ans)
 	if err != nil {
-		h.l.Error(fmt.Errorf("v1 - writeResponse - Marshal: %w", err))
+		h.l.Error(fmt.Errorf("v1 - WriteResponse - Marshal: %w", err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

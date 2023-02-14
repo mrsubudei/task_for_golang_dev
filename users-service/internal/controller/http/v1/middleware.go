@@ -9,35 +9,36 @@ import (
 	"github.com/mrsubudei/task_for_golang_dev/users-service/internal/entity"
 )
 
-func (h *UsersHandler) checkValues(next http.Handler) http.Handler {
+func (h *UsersHandler) CheckValues(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
 		user := entity.User{}
-		err := h.parseJson(w, r, &user)
+		err := h.ParseJson(w, r, &user)
 		if err != nil {
-			h.l.Error(fmt.Errorf("v1 - checkValues - parseJson: %w", err))
+			h.l.Error(fmt.Errorf("v1 - CheckValues - ParseJson: %w", err))
 			return
 		}
 
 		errorMsg := ErrMessage{
-			code:  http.StatusBadRequest,
+			Code:  http.StatusBadRequest,
 			Error: EmptyFiledRequest,
 		}
 
 		switch {
 		case user.Email == "":
 			errorMsg.Detail = EmailFieldEmpty
-			h.writeResponse(w, errorMsg)
+			h.WriteResponse(w, errorMsg)
 			return
 		case user.Password == "":
 			errorMsg.Detail = PasswordFieldEmpty
-			h.writeResponse(w, errorMsg)
+			h.WriteResponse(w, errorMsg)
 			return
 		}
 
 		_, err = mail.ParseAddress(user.Email)
 		if err != nil {
-			h.writeResponse(w, ErrMessage{
-				code:  http.StatusBadRequest,
+			h.WriteResponse(w, ErrMessage{
+				Code:  http.StatusBadRequest,
 				Error: WrongEmailFormat,
 			})
 			return

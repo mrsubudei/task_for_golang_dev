@@ -48,10 +48,10 @@ type (
 )
 
 // NewConfig returns app config.
-func NewConfig(path string) (*Config, error) {
+func NewConfig(path, envPath string) (*Config, error) {
 	cfg := &Config{}
 
-	err := setEnv()
+	err := setEnv(envPath)
 	if err != nil {
 		return nil, fmt.Errorf("config - setEnv: %w", err)
 	}
@@ -64,10 +64,10 @@ func NewConfig(path string) (*Config, error) {
 	return cfg, nil
 }
 
-func setEnv() error {
+func setEnv(path string) error {
 	var file *os.File
 	var err error
-	file, err = os.Open("env.example")
+	file, err = os.Open(path)
 	if err != nil {
 		// this is need for tests files
 		if file, err = os.Open("../../env.example"); err != nil {
