@@ -69,14 +69,10 @@ func setEnv(path string) error {
 	var err error
 	file, err = os.Open(path)
 	if err != nil {
-		// this is need for tests files
-		if file, err = os.Open("../../env.example"); err != nil {
-			if file, err = os.Open("../../../../env.example"); err != nil {
-				return fmt.Errorf("setEnv - Open: %w", err)
-			}
-		}
+		return fmt.Errorf("setEnv - Open: %w", err)
 	}
 	defer file.Close()
+
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()

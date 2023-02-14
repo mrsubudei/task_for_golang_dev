@@ -11,6 +11,8 @@ require (
 	github.com/mrsubudei/task_for_golang_dev/spawn-service v0.0.0-20230213125631-f5eb92c933a6
 	github.com/rs/zerolog v1.29.0
 	github.com/stretchr/testify v1.8.1
+	github.com/swaggo/http-swagger v1.3.3
+	github.com/swaggo/swag v1.8.1
 	go.mongodb.org/mongo-driver v1.11.1
 	google.golang.org/grpc v1.53.0
 )
@@ -32,7 +34,6 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/kr/pretty v0.2.1 // indirect
-	github.com/kr/text v0.2.0 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
@@ -41,8 +42,6 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/spf13/afero v1.8.2 // indirect
 	github.com/swaggo/files v0.0.0-20220610200504-28940afbdbfe // indirect
-	github.com/swaggo/http-swagger v1.3.3 // indirect
-	github.com/swaggo/swag v1.8.1 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.1.1 // indirect
 	github.com/xdg-go/stringprep v1.0.3 // indirect
